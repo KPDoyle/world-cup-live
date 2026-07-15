@@ -2,12 +2,14 @@
 
 const FINAL = new Set(['FT', 'AET', 'PEN']);
 const LIVE = new Set(['1H', 'HT', '2H', 'ET', 'P', 'BT', 'LIVE']);
+const savedFavourites = JSON.parse(localStorage.getItem('wc-favourites') || '[]');
 const state = {
   data: null,
   previous: new Map(),
   view: 'matches',
   filter: 'all',
-  favourites: new Set(JSON.parse(localStorage.getItem('wc-favourites') || '[]')),
+  favourites: new Set(savedFavourites),
+  seededEngland: localStorage.getItem('wc-england-seeded') === 'yes',
   countdownTimer: null,
   pollingTimer: null,
   toastTimer: null
@@ -38,7 +40,8 @@ function statusText(f) {
 }
 function featuredFixture() {
   const fixtures = state.data?.fixtures || [];
-  return fixtures.find(isLive) || fixtures.find((f) => isUpcoming(f) && new Date(f.date) > new Date()) || [...fixtures].reverse().find(isFinal) || fixtures[0];
+  const england = fixtures.find((f) => (f.home.name === 'England' || f.away.name === 'England') && (isLive(f) || isUpcoming(f)));
+  return england || fixtures.find(isLive) || fixtures.find((f) => isUpcoming(f) && new Date(f.date) > new Date()) || [...fixtures].reverse().find(isFinal) || fixtures[0];
 }
 function renderHero() {
   const f = featuredFixture(); if (!f) return;
@@ -54,7 +57,7 @@ function renderHero() {
   }
 }
 function favouriteButton(f) { const active = state.favourites.has(f.home.id) || state.favourites.has(f.away.id); return `<button class="star-button ${active ? 'active' : ''}" data-favourite-match="${f.id}" type="button" aria-label="Add teams to favourites">★</button>`; }
-function matchCard(f) { return `<article class="match-card ${state.data.justFinished?.includes(f.id) ? 'just-finished' : ''}" data-match-id="${f.id}">${favouriteButton(f)}<div class="card-team">${crest(f.home)}<div class="card-team-name">${escapeHtml(f.home.name)}</div></div><div class="card-score"><strong>${scoreText(f)}</strong><span class="${isLive(f) ? 'live-text' : ''}">${escapeHtml(statusText(f))}</span></div><div class="card-team">${crest(f.away)}<div class="card-team-name">${escapeHtml(f.away.name)}</div></div><div class="match-meta">${escapeHtml(f.round)} · ${escapeHtml(f.venue)}</div></article>`; }
+function matchCard(f) { const england = f.home.name === 'England' || f.away.name === 'England'; return `<article class="match-card ${england ? 'england-match' : ''} ${state.data.justFinished?.includes(f.id) ? 'just-finished' : ''}" data-match-id="${f.id}">${favouriteButton(f)}<div class="card-team">${crest(f.home)}<div class="card-team-name">${escapeHtml(f.home.name)}</div></div><div class="card-score"><strong>${scoreText(f)}</strong><span class="${isLive(f) ? 'live-text' : ''}">${escapeHtml(statusText(f))}</span></div><div class="card-team">${crest(f.away)}<div class="card-team-name">${escapeHtml(f.away.name)}</div></div><div class="match-meta">${escapeHtml(f.round)} · ${escapeHtml(f.venue)}</div></article>`; }
 function filteredFixtures() {
   const fixtures = state.data?.fixtures || [];
   if (state.filter === 'live') return fixtures.filter(isLive);
@@ -76,20 +79,24 @@ function renderBracket() {
 }
 function renderStandings() {
   const groups=state.data?.standings||[];
-  el('standingsList').innerHTML=groups.map((g)=>`<section class="group-card"><h3>${escapeHtml(g.group)}</h3><table class="standings-table"><thead><tr><th>#</th><th>Team</th><th>P</th><th>W</th><th>D</th><th>L</th><th>GD</th><th>Pts</th></tr></thead><tbody>${g.rows.map((r)=>`<tr><td>${r.rank}</td><td class="team-cell"><span class="table-team">${r.team.logo?`<img src="${escapeHtml(r.team.logo)}" alt="">`:''}${escapeHtml(r.team.name)}</span></td><td>${r.played}</td><td>${r.win}</td><td>${r.draw}</td><td>${r.lose}</td><td>${r.goalsDiff}</td><td><strong>${r.points}</strong></td></tr>`).join('')}</tbody></table></section>`).join('')||'<div class="empty-state"><strong>Standings need live data</strong>Add your API key to load all 12 groups.</div>';
+  el('standingsList').innerHTML=groups.map((g)=>`<section class="group-card"><h3>${escapeHtml(g.group)}</h3><table class="standings-table"><thead><tr><th>#</th><th>Team</th><th>P</th><th>W</th><th>D</th><th>L</th><th>GD</th><th>Pts</th></tr></thead><tbody>${g.rows.map((r)=>`<tr class="${r.team.name==='England'?'england-row':''}"><td>${r.rank}</td><td class="team-cell"><span class="table-team">${r.team.logo?`<img src="${escapeHtml(r.team.logo)}" alt="">`:''}${escapeHtml(r.team.name)}</span></td><td>${r.played}</td><td>${r.win}</td><td>${r.draw}</td><td>${r.lose}</td><td>${r.goalsDiff}</td><td><strong>${r.points}</strong></td></tr>`).join('')}</tbody></table></section>`).join('')||'<div class="empty-state"><strong>Standings need live data</strong>Add your API key to load all 12 groups.</div>';
 }
-function renderFavourites(){const fixtures=(state.data?.fixtures||[]).filter((f)=>state.favourites.has(f.home.id)||state.favourites.has(f.away.id));el('favouritesList').innerHTML=fixtures.length?fixtures.map(matchCard).join(''):'<div class="empty-state"><strong>No favourite teams yet</strong>Tap the star on any match to follow both teams.</div>';}
+function renderFavourites(){const fixtures=(state.data?.fixtures||[]).filter((f)=>state.favourites.has(f.home.id)||state.favourites.has(f.away.id));el('favouritesList').innerHTML=fixtures.length?fixtures.map(matchCard).join(''):'<div class="empty-state"><strong>No favourite teams yet</strong>England will be followed automatically when its fixtures load. Tap a star to add more teams.</div>';}
 function updateConnection(){const dot=el('connectionDot'),date=state.data?.lastUpdated?formatDate(state.data.lastUpdated,{hour:'2-digit',minute:'2-digit',second:'2-digit'}):'';dot.className=`connection-dot ${state.data?.connected?'online':state.data?.mode==='demo'?'':'offline'}`;el('connectionText').textContent=state.data?.mode==='demo'?`Demo mode · updated ${date}`:state.data?.connected?`Live · updated ${date}`:`Reconnecting · ${state.data?.providerMessage||''}`;}
 function renderAll(){if(!state.data)return;updateConnection();renderHero();renderMatches();renderBracket();renderStandings();renderFavourites();}
 function showToast(message){const toast=el('toast');toast.textContent=message;toast.classList.add('show');clearTimeout(state.toastTimer);state.toastTimer=setTimeout(()=>toast.classList.remove('show'),4500);}
-function notifyFinal(f){const message=`${f.home.name} ${f.goals.home}–${f.goals.away} ${f.away.name}`;showToast(`Full time: ${message}`);if(Notification.permission==='granted')new Notification('Full-time result',{body:message,icon:'/icon.svg',tag:`fixture-${f.id}`});}
-function consume(next){const incoming=new Map(next.fixtures.map((f)=>[f.id,f]));if(state.data)for(const[id,f]of incoming){const before=state.previous.get(id);if(before&&!isFinal(before)&&isFinal(f))notifyFinal(f);}state.data=next;state.previous=incoming;renderAll();}
+function notifyFinal(f){const message=`${f.home.name} ${f.goals.home}–${f.goals.away} ${f.away.name}`;showToast(`Full time: ${message}`);if(Notification.permission==='granted')new Notification("Kevin's World Cup Live",{body:`Full time: ${message}`,icon:'/icon.svg',tag:`fixture-${f.id}`});}
+function seedEngland(fixtures){if(state.seededEngland)return;for(const f of fixtures){for(const team of [f.home,f.away])if(team.name==='England')state.favourites.add(team.id);}localStorage.setItem('wc-favourites',JSON.stringify([...state.favourites]));localStorage.setItem('wc-england-seeded','yes');state.seededEngland=true;}
+function consume(next){seedEngland(next.fixtures||[]);const incoming=new Map(next.fixtures.map((f)=>[f.id,f]));if(state.data)for(const[id,f]of incoming){const before=state.previous.get(id);if(before&&!isFinal(before)&&isFinal(f))notifyFinal(f);}state.data=next;state.previous=incoming;renderAll();}
 async function loadScores(){try{const response=await fetch(`/api/state?t=${Date.now()}`,{cache:'no-store'});if(!response.ok)throw new Error('Unable to load scores');consume(await response.json());}catch(error){el('connectionText').textContent=error.message;el('connectionDot').className='connection-dot offline';}}
 function startPolling(){clearInterval(state.pollingTimer);loadScores();state.pollingTimer=setInterval(loadScores,15000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)loadScores();});}
 function setView(view){state.view=view;document.querySelectorAll('.tab').forEach((b)=>b.classList.toggle('active',b.dataset.view===view));document.querySelectorAll('.view').forEach((n)=>n.classList.remove('active'));el(`${view}View`).classList.add('active');}
-document.addEventListener('click',async(event)=>{const tab=event.target.closest('[data-view]');if(tab)setView(tab.dataset.view);const filter=event.target.closest('[data-filter]');if(filter){state.filter=filter.dataset.filter;document.querySelectorAll('[data-filter]').forEach((b)=>b.classList.toggle('active',b===filter));renderMatches();}const star=event.target.closest('[data-favourite-match]');if(star){const f=state.data.fixtures.find((x)=>x.id===Number(star.dataset.favouriteMatch));if(f){const already=state.favourites.has(f.home.id)||state.favourites.has(f.away.id);for(const id of[f.home.id,f.away.id])already?state.favourites.delete(id):state.favourites.add(id);localStorage.setItem('wc-favourites',JSON.stringify([...state.favourites]));renderMatches();renderFavourites();showToast(already?'Teams removed from My teams':'Teams added to My teams');}}});
+function applyTheme(theme){document.documentElement.dataset.theme=theme;localStorage.setItem('wc-theme',theme);el('themeButton').innerHTML=`<span aria-hidden="true">${theme==='light'?'🌙':'☀️'}</span>`;}
+document.addEventListener('click',async(event)=>{const tab=event.target.closest('[data-view]');if(tab)setView(tab.dataset.view);const filter=event.target.closest('[data-filter]');if(filter){state.filter=filter.dataset.filter;document.querySelectorAll('[data-filter]').forEach((b)=>b.classList.toggle('active',b===filter));renderMatches();}const star=event.target.closest('[data-favourite-match]');if(star){const f=state.data.fixtures.find((x)=>x.id===Number(star.dataset.favouriteMatch));if(f){const already=state.favourites.has(f.home.id)||state.favourites.has(f.away.id);for(const id of[f.home.id,f.away.id])already?state.favourites.delete(id):state.favourites.add(id);localStorage.setItem('wc-favourites',JSON.stringify([...state.favourites]));renderMatches();renderFavourites();showToast(already?'Teams removed from Kevin’s teams':'Teams added to Kevin’s teams');}}});
 el('refreshButton').addEventListener('click',loadScores);
+el('themeButton').addEventListener('click',()=>applyTheme(document.documentElement.dataset.theme==='light'?'dark':'light'));
 el('notificationsButton').addEventListener('click',async()=>{if(!('Notification'in window))return showToast('Notifications are not supported on this device.');const permission=await Notification.requestPermission();el('notificationsButton').classList.toggle('enabled',permission==='granted');showToast(permission==='granted'?'Full-time notifications enabled':'Notifications were not enabled');});
 if('serviceWorker'in navigator)navigator.serviceWorker.register('/sw.js').catch(()=>{});
 el('notificationsButton').classList.toggle('enabled','Notification'in window&&Notification.permission==='granted');
+applyTheme(localStorage.getItem('wc-theme')||'dark');
 startPolling();
