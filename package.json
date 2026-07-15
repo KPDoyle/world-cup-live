@@ -1,0 +1,13 @@
+{
+  "name": "world-cup-live",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Mobile-first World Cup live scores app with SSE updates and automatic result detection.",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "NODE_ENV=development node --watch server.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
