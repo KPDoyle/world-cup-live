@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#081520">
+  <meta name="theme-color" content="#07121f">
   <meta name="description" content="Kevin's personalised live World Cup scores, fixtures, groups and knockout bracket.">
   <title>Kevin's World Cup Live</title>
   <link rel="manifest" href="/manifest.webmanifest">
@@ -14,10 +14,11 @@
   <div class="app-shell">
     <header class="topbar">
       <div class="brand-wrap">
-        <div class="brand-mark" aria-hidden="true">KD</div>
-        <div>
-          <div class="eyebrow">KEVIN'S 2026 TOURNAMENT</div>
+        <div class="brand-mark" aria-hidden="true"><span>K</span></div>
+        <div class="brand-copy">
+          <div class="eyebrow">FIFA WORLD CUP 2026</div>
           <h1>Kevin's World Cup Live</h1>
+          <p class="brand-subtitle">Scores, fixtures and tournament progress</p>
         </div>
       </div>
       <div class="header-actions">
@@ -30,35 +31,38 @@
       <section class="connection-strip" aria-live="polite">
         <span id="connectionDot" class="connection-dot"></span>
         <span id="connectionText">Connecting…</span>
-        <button id="refreshButton" class="text-button" type="button">Refresh</button>
+        <button id="refreshButton" class="text-button" type="button">Refresh data</button>
       </section>
 
       <section id="hero" class="hero-card skeleton" aria-label="Featured match"></section>
 
       <nav class="section-tabs" aria-label="App sections">
-        <button class="tab active" data-view="matches" type="button">Matches</button>
-        <button class="tab" data-view="bracket" type="button">Bracket</button>
-        <button class="tab" data-view="groups" type="button">Groups</button>
-        <button class="tab" data-view="favourites" type="button">My teams</button>
+        <button class="tab active" data-view="matches" type="button"><span>Matches</span></button>
+        <button class="tab" data-view="bracket" type="button"><span>Knockout</span></button>
+        <button class="tab" data-view="groups" type="button"><span>Standings</span></button>
+        <button class="tab" data-view="favourites" type="button"><span>My teams</span></button>
       </nav>
 
       <section id="matchesView" class="view active">
+        <div class="section-heading compact-heading">
+          <div><div class="eyebrow">MATCH CENTRE</div><h2>Fixtures and results</h2></div>
+        </div>
         <div class="filter-row" id="matchFilters" aria-label="Match filters">
-          <button class="chip active" data-filter="all" type="button">All</button>
+          <button class="chip active" data-filter="all" type="button">Overview</button>
           <button class="chip" data-filter="live" type="button">Live</button>
-          <button class="chip" data-filter="finished" type="button">Finished</button>
+          <button class="chip" data-filter="finished" type="button">Results</button>
           <button class="chip" data-filter="upcoming" type="button">Upcoming</button>
         </div>
         <div id="matchesList" class="matches-list" aria-live="polite"></div>
       </section>
 
       <section id="bracketView" class="view">
-        <div class="section-heading"><div><div class="eyebrow">KNOCKOUT PATH</div><h2>Road to the final</h2></div></div>
+        <div class="section-heading"><div><div class="eyebrow">KNOCKOUT STAGE</div><h2>Road to the final</h2></div></div>
         <div id="bracketList" class="bracket-scroll"></div>
       </section>
 
       <section id="groupsView" class="view">
-        <div class="section-heading"><div><div class="eyebrow">GROUP TABLES</div><h2>Standings</h2></div></div>
+        <div class="section-heading"><div><div class="eyebrow">GROUP STAGE</div><h2>Standings</h2></div></div>
         <div id="standingsList"></div>
       </section>
 
@@ -68,7 +72,7 @@
       </section>
     </main>
 
-    <footer><p>Kevin's unofficial fan app. Live data requires an API-Football key. Team marks belong to their respective owners.</p></footer>
+    <footer><p>Unofficial supporter app · Live data powered through API-Football</p></footer>
   </div>
 
   <div id="toast" class="toast" role="status" aria-live="assertive"></div>
