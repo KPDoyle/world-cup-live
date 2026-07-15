@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#081520">
+  <meta name="description" content="Live World Cup scores, fixtures and knockout bracket with instant final-whistle updates.">
+  <title>World Cup Live</title>
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand-wrap">
+        <div class="brand-mark" aria-hidden="true">WC</div>
+        <div>
+          <div class="eyebrow">2026 TOURNAMENT</div>
+          <h1>World Cup Live</h1>
+        </div>
+      </div>
+      <button id="notificationsButton" class="icon-button" type="button" aria-label="Enable match notifications" title="Enable match notifications">
+        <span aria-hidden="true">🔔</span>
+      </button>
+    </header>
+
+    <main>
+      <section class="connection-strip" aria-live="polite">
+        <span id="connectionDot" class="connection-dot"></span>
+        <span id="connectionText">Connecting…</span>
+        <button id="refreshButton" class="text-button" type="button">Refresh</button>
+      </section>
+
+      <section id="hero" class="hero-card skeleton" aria-label="Featured match"></section>
+
+      <nav class="section-tabs" aria-label="App sections">
+        <button class="tab active" data-view="matches" type="button">Matches</button>
+        <button class="tab" data-view="bracket" type="button">Bracket</button>
+        <button class="tab" data-view="groups" type="button">Groups</button>
+        <button class="tab" data-view="favourites" type="button">My teams</button>
+      </nav>
+
+      <section id="matchesView" class="view active">
+        <div class="filter-row" id="matchFilters" aria-label="Match filters">
+          <button class="chip active" data-filter="all" type="button">All</button>
+          <button class="chip" data-filter="live" type="button">Live</button>
+          <button class="chip" data-filter="finished" type="button">Finished</button>
+          <button class="chip" data-filter="upcoming" type="button">Upcoming</button>
+        </div>
+        <div id="matchesList" class="matches-list" aria-live="polite"></div>
+      </section>
+
+      <section id="bracketView" class="view">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">KNOCKOUT PATH</div>
+            <h2>Road to the final</h2>
+          </div>
+        </div>
+        <div id="bracketList" class="bracket-scroll"></div>
+      </section>
+
+      <section id="groupsView" class="view">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">GROUP TABLES</div>
+            <h2>Standings</h2>
+          </div>
+        </div>
+        <div id="standingsList"></div>
+      </section>
+
+      <section id="favouritesView" class="view">
+        <div class="section-heading">
+          <div>
+            <div class="eyebrow">PERSONALISED</div>
+            <h2>My teams</h2>
+          </div>
+        </div>
+        <div id="favouritesList"></div>
+      </section>
+    </main>
+
+    <footer>
+      <p>Unofficial fan app. Live data requires an API-Football key. Team marks belong to their respective owners.</p>
+    </footer>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="assertive"></div>
+  <script src="/app.js" defer></script>
+</body>
+</html>
