@@ -1,7 +1,7 @@
 {
-  "name": "World Cup Live",
-  "short_name": "WC Live",
-  "description": "Live World Cup scores, fixtures and knockout bracket.",
+  "name": "Kevin's World Cup Live",
+  "short_name": "Kevin's WC",
+  "description": "Kevin's personalised live World Cup scores, fixtures and knockout bracket.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#06111a",
