@@ -32,6 +32,22 @@ const MATCH_LINEUPS = {
     awayFormation: '4-2-3-1',
     home: ['Unai Simón','Pedro Porro','Pau Cubarsí','Aymeric Laporte','Marc Cucurella','Rodri','Fabián Ruiz','Dani Olmo','Lamine Yamal','Álex Baena','Mikel Oyarzabal'],
     away: ['Mike Maignan','Jules Koundé','Dayot Upamecano','William Saliba','Lucas Digne','Aurélien Tchouaméni','Adrien Rabiot','Ousmane Dembélé','Michael Olise','Bradley Barcola','Kylian Mbappé']
+  },
+  'France|England': {
+    title: 'France v England',
+    stage: 'Third-place play-off · 18 July 2026',
+    homeFormation: '4-2-3-1',
+    awayFormation: '4-1-4-1',
+    home: ['Mike Maignan','Malo Gusto','Ibrahima Konaté','Maxence Lacroix','Theo Hernandez','Warren Zaïre-Emery','Adrien Rabiot','Michael Olise','Rayan Cherki','Désiré Doué','Kylian Mbappé'],
+    away: ['Dean Henderson','Jarell Quansah','Ezri Konsa','Marc Guéhi','Djed Spence','Declan Rice','Bukayo Saka','Eberechi Eze','Morgan Rogers','Marcus Rashford','Ivan Toney']
+  },
+  'England|France': {
+    title: 'England v France',
+    stage: 'Third-place play-off · 18 July 2026',
+    homeFormation: '4-1-4-1',
+    awayFormation: '4-2-3-1',
+    home: ['Dean Henderson','Jarell Quansah','Ezri Konsa','Marc Guéhi','Djed Spence','Declan Rice','Bukayo Saka','Eberechi Eze','Morgan Rogers','Marcus Rashford','Ivan Toney'],
+    away: ['Mike Maignan','Malo Gusto','Ibrahima Konaté','Maxence Lacroix','Theo Hernandez','Warren Zaïre-Emery','Adrien Rabiot','Michael Olise','Rayan Cherki','Désiré Doué','Kylian Mbappé']
   }
 };
 
@@ -87,7 +103,6 @@ document.addEventListener('click', (event) => {
   if (event.target.closest('.star-button')) return;
   const close = event.target.closest('.lineup-close');
   if (close) return closeLineupModal();
-  const modal = event.target.closest('#lineupModal');
   if (event.target.id === 'lineupModal') return closeLineupModal();
   const card = event.target.closest('.match-card');
   if (!card || !state.data) return;
