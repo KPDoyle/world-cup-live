@@ -10,6 +10,7 @@
   <link rel="icon" href="/icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/styles.css">
   <link rel="stylesheet" href="/lineups.css">
+  <link rel="stylesheet" href="/ratings.css">
 </head>
 <body>
   <div class="app-shell">
@@ -27,58 +28,23 @@
         <button id="notificationsButton" class="icon-button" type="button" aria-label="Enable match notifications" title="Enable match notifications"><span aria-hidden="true">🔔</span></button>
       </div>
     </header>
-
     <main>
-      <section class="connection-strip" aria-live="polite">
-        <span id="connectionDot" class="connection-dot"></span>
-        <span id="connectionText">Connecting…</span>
-        <button id="refreshButton" class="text-button" type="button">Refresh data</button>
-      </section>
-
+      <section class="connection-strip" aria-live="polite"><span id="connectionDot" class="connection-dot"></span><span id="connectionText">Connecting…</span><button id="refreshButton" class="text-button" type="button">Refresh data</button></section>
       <section id="hero" class="hero-card skeleton" aria-label="Featured match"></section>
-
       <nav class="section-tabs" aria-label="App sections">
         <button class="tab active" data-view="matches" type="button"><span class="tab-icon">⚽</span><span>Matches</span></button>
         <button class="tab" data-view="bracket" type="button"><span class="tab-icon">🏆</span><span>Knockout</span></button>
         <button class="tab" data-view="groups" type="button"><span class="tab-icon">▦</span><span>Standings</span></button>
         <button class="tab" data-view="favourites" type="button"><span class="tab-icon">★</span><span>My teams</span></button>
       </nav>
-
-      <section id="matchesView" class="view active">
-        <div class="section-heading compact-heading">
-          <div><div class="eyebrow">MATCH CENTRE</div><h2>Fixtures and results</h2></div>
-        </div>
-        <div class="filter-row" id="matchFilters" aria-label="Match filters">
-          <button class="chip active" data-filter="all" type="button">Overview</button>
-          <button class="chip" data-filter="live" type="button">Live</button>
-          <button class="chip" data-filter="finished" type="button">Results</button>
-          <button class="chip" data-filter="upcoming" type="button">Upcoming</button>
-        </div>
-        <div id="matchesList" class="matches-list" aria-live="polite"></div>
-      </section>
-
-      <section id="bracketView" class="view">
-        <div class="section-heading"><div><div class="eyebrow">KNOCKOUT STAGE</div><h2>Road to the final</h2></div></div>
-        <div id="bracketList" class="bracket-scroll"></div>
-      </section>
-
-      <section id="groupsView" class="view">
-        <div class="section-heading"><div><div class="eyebrow">GROUP STAGE</div><h2>Standings</h2></div></div>
-        <div id="standingsList"></div>
-      </section>
-
-      <section id="favouritesView" class="view">
-        <div class="section-heading"><div><div class="eyebrow">PERSONALISED</div><h2>Kevin's teams</h2></div></div>
-        <div id="favouritesList"></div>
-      </section>
+      <section id="matchesView" class="view active"><div class="section-heading compact-heading"><div><div class="eyebrow">MATCH CENTRE</div><h2>Fixtures and results</h2></div></div><div class="filter-row" id="matchFilters" aria-label="Match filters"><button class="chip active" data-filter="all" type="button">Overview</button><button class="chip" data-filter="live" type="button">Live</button><button class="chip" data-filter="finished" type="button">Results</button><button class="chip" data-filter="upcoming" type="button">Upcoming</button></div><div id="matchesList" class="matches-list" aria-live="polite"></div></section>
+      <section id="bracketView" class="view"><div class="section-heading"><div><div class="eyebrow">KNOCKOUT STAGE</div><h2>Road to the final</h2></div></div><div id="bracketList" class="bracket-scroll"></div></section>
+      <section id="groupsView" class="view"><div class="section-heading"><div><div class="eyebrow">GROUP STAGE</div><h2>Standings</h2></div></div><div id="standingsList"></div></section>
+      <section id="favouritesView" class="view"><div class="section-heading"><div><div class="eyebrow">PERSONALISED</div><h2>Kevin's teams</h2></div></div><div id="favouritesList"></div></section>
     </main>
-
     <footer><p>Unofficial supporter app · Live data powered through API-Football</p></footer>
   </div>
-
-  <div id="lineupModal" class="lineup-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Match line-ups">
-    <div id="lineupContent" class="lineup-panel"></div>
-  </div>
+  <div id="lineupModal" class="lineup-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Match line-ups"><div id="lineupContent" class="lineup-panel"></div></div>
   <div id="toast" class="toast" role="status" aria-live="assertive"></div>
   <script src="/app.js" defer></script>
   <script src="/lineups.js" defer></script>
