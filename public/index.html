@@ -9,6 +9,7 @@
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" href="/icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/lineups.css">
 </head>
 <body>
   <div class="app-shell">
@@ -75,7 +76,11 @@
     <footer><p>Unofficial supporter app · Live data powered through API-Football</p></footer>
   </div>
 
+  <div id="lineupModal" class="lineup-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Match line-ups">
+    <div id="lineupContent" class="lineup-panel"></div>
+  </div>
   <div id="toast" class="toast" role="status" aria-live="assertive"></div>
   <script src="/app.js" defer></script>
+  <script src="/lineups.js" defer></script>
 </body>
 </html>
